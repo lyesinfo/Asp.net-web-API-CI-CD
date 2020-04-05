@@ -29,6 +29,9 @@ steps:
 
 - task: DotNetCoreCLI@2
   inputs:
+    command: 'build'
+- task: DotNetCoreCLI@2
+  inputs:
     command: publish
     publishWebProjects: false
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
@@ -39,6 +42,14 @@ steps:
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
     artifactName: 'AsptNetCICD'
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Paiement à l’utilisation(5193e458-3af0-4c9d-b90e-8a4f95d9ace4)'
+    appType: 'webApp'
+    WebAppName: 'AspNetCICDTest'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
 
 
 
