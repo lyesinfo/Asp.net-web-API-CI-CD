@@ -14,7 +14,7 @@ namespace SampleDotNetWebAPI
 
         public int GetCityTemperature()
         {
-            return 23;
+            return 24;
         }
     }
 }
