@@ -22,5 +22,33 @@ steps:
     restoreSolution: '$(solution)'
 
 
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+   command: build
+   projects: '**/*.csproj'
+   arguments: '--configuration Release'
+
+- task: DotNetCoreCLI@2
+  inputs:
+   command: test
+   projects: '**/*.Test.csproj'
+   arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
 
+- task: DotNetCoreCLI@2
+  inputs:
+   command: publish
+   publishWebProjects: True
+   arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+   zipAfterPublish: True 
+
+- task: PublishBuildArtifacts@1
+  displayName: 'publish artifacts'
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Paiement à l’utilisation(5193e458-3af0-4c9d-b90e-8a4f95d9ace4)'
+    WebAppName: 'AspNetCICDTest'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
